@@ -1,0 +1,130 @@
+<template>
+    <lightning-card title="Account Payments" icon-name="standard:account">
+        <div class="slds-p-around_medium">
+            <!-- 3 sütunlu layout -->
+            <lightning-layout horizontal-align="spread" pull-to-boundary="small">
+                <!-- SOL: Account listesi -->
+                <lightning-layout-item size="4" padding="around-small">
+                    <h2 class="slds-text-heading_small slds-m-bottom_small">
+                        Accounts
+                    </h2>
+
+                    <template if:true={accounts}>
+                        <lightning-datatable
+                            key-field="Id"
+                            data={accounts}
+                            columns={accountColumns}
+                            max-row-selection="1"
+                            onrowselection={handleAccountRowSelection}>
+                        </lightning-datatable>
+                    </template>
+
+                    <template if:true={accountError}>
+                        <p class="error-text">
+                            Error loading accounts.
+                        </p>
+                    </template>
+                </lightning-layout-item>
+
+                <!-- ORTA: Seçili account'un payments listesi -->
+                <lightning-layout-item size="4" padding="around-small">
+                    <h2 class="slds-text-heading_small slds-m-bottom_small">
+                        Payments
+                        <template if:true={selectedAccountName}>
+                            for "{selectedAccountName}"
+                        </template>
+                    </h2>
+
+                    <template if:false={isAccountSelected}>
+                        <p>Please select an Account to view its payments.</p>
+                    </template>
+
+                    <template if:true={isAccountSelected}>
+                        <template if:true={payments}>
+                            <lightning-datatable
+                                key-field="Id"
+                                data={payments}
+                                columns={paymentColumns}>
+                            </lightning-datatable>
+                        </template>
+
+                        <template if:true={paymentsError}>
+                            <p class="error-text">
+                                Error loading payments.
+                            </p>
+                        </template>
+
+                        <template if:true={noPayments}>
+                            <p>No payments found for this account.</p>
+                        </template>
+                    </template>
+                </lightning-layout-item>
+
+                <!-- SAĞ: Yeni Payment oluşturma formu -->
+                <lightning-layout-item size="4" padding="around-small">
+                    <h2 class="slds-text-heading_small slds-m-bottom_small">
+                        Create Payment
+                    </h2>
+
+                    <template if:false={isAccountSelected}>
+                        <p>Select an account first to create a payment.</p>
+                    </template>
+
+                    <template if:true={isAccountSelected}>
+                        <div class="slds-grid slds-wrap slds-gutters">
+                            <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                <lightning-combobox
+                                    name="paymentType"
+                                    label="Payment Type"
+                                    value={paymentType}
+                                    options={paymentTypeOptions}
+                                    onchange={handleInputChange}
+                                    required>
+                                </lightning-combobox>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                <lightning-input
+                                    name="amount"
+                                    type="number"
+                                    label="Amount"
+                                    value={amount}
+                                    onchange={handleInputChange}
+                                    required>
+                                </lightning-input>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                <lightning-input
+                                    name="dueDate"
+                                    type="date"
+                                    label="Due Date"
+                                    value={dueDate}
+                                    onchange={handleInputChange}
+                                    required>
+                                </lightning-input>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                <lightning-textarea
+                                    name="notes"
+                                    label="Notes"
+                                    value={notes}
+                                    onchange={handleInputChange}>
+                                </lightning-textarea>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-m-top_small">
+                                <lightning-button
+                                    variant="brand"
+                                    label="Create Payment"
+                                    onclick={handleCreatePayment}>
+                                </lightning-button>
+                            </div>
+                        </div>
+                    </template>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </lightning-card>
+</template>
