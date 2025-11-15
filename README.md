@@ -36,7 +36,7 @@ This project was developed as part of the second phase of the **Junior Software 
 
 ---
 
-## 🗄️ Custom Object Schema (Payment__c)
+##  Custom Object Schema (Payment__c)
 
 ### Object Name  
 **Payment (API: Payment__c)**
@@ -65,7 +65,7 @@ This project was developed as part of the second phase of the **Junior Software 
 
 Below is the object schema showing the **Master-Detail relationship** between Account and Payment:
 
-
+![Schema Builder](./schema.png)
 
 ---
 
