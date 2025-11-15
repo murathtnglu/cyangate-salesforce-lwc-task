@@ -1,18 +1,106 @@
-# Salesforce DX Project: Next Steps
+# Account Payments Management (LWC + Apex)
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+A Salesforce Lightning Web Component (LWC) that displays **Accounts** and their related **Payments**, allows creating new Payment records, and visualizes account payment activity using **Reports & Dashboards**.
 
-## How Do You Plan to Deploy Your Changes?
+This project was developed as part of the second phase of the **Junior Software Developer Task — CyanGate** technical assessment.
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+---
 
-## Configure Your Salesforce DX Project
+## Features
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+### **Lightning Web Component: AccountPayments**
+- Lists all **Accounts** in the org.
+- When an account is selected, lists all **Payments** related to that account.
+- Dynamic form to create new Payments:
+  - Payment Type (Picklist — Service, Product, Other)
+  - Amount (Currency)
+  - Due Date (Date)
+  - Notes (Long Text)
+- Inline validation & required field checks.
+- Automatic refresh of the Payment list after creation.
+- Toast notifications for success/error states.
 
-## Read All About It
+### **Apex Controller**
+- `AccountPaymentController.cls`
+- Methods:
+  - `getAccounts()` → returns Accounts
+  - `getPayments(accountId)` → returns related Payments
+  - `createPayment(paymentRecord)` → inserts new Payment with validation
 
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+### **Apex Test Class**
+- `AccountPaymentController_Test.cls`
+- Covers:
+  - Happy path Payment creation
+  - Creating Payment without Account (throws expected exception)
+- **Test Coverage: ~95%+**
+
+---
+
+## 🗄️ Custom Object Schema (Payment__c)
+
+### Object Name  
+**Payment (API: Payment__c)**
+
+### Fields
+| Field Label       | API Name            | Type                  | Required |
+|------------------|---------------------|-----------------------|----------|
+| Payment Type      | Payment_Type__c     | Picklist (Service, Product, Other) | ✔️ |
+| Amount            | Amount__c           | Currency(18,0)        | ✔️ |
+| Due Date          | Due_Date__c         | Date                  | ✔️ |
+| Notes             | Notes__c            | Long Text Area        | ❌ |
+| Account           | Account__c          | Master-Detail(Account)| ✔️ |
+| Payment Name      | Name                | Auto Number (PAY-{0000}) | ✔️ |
+
+### Relationship Type  
+**Master-Detail (Account → Payment)**  
+**Reasoning:**
+- Payments should not exist without an Account.  
+- When an Account is deleted, related Payments must also be deleted.  
+- Provides roll-up summary support.  
+- Fits real financial data integrity expectations.
+
+---
+
+## Schema Builder Screenshot
+
+Below is the object schema showing the **Master-Detail relationship** between Account and Payment:
+
+
+
+---
+
+
+## Reports & Dashboards
+
+### Report: Accounts with Payments Report
+- Report Type:
+  - **Accounts with Payments**
+- Grouped By:
+  - Payment Type  
+  - Account Name
+- Columns:
+  - Payment Name  
+  - Payment Type  
+  - Amount  
+  - Due Date  
+  - Notes  
+- Visualization:
+  - Donut Chart → Sum of Amount by Account
+  - Bar Chart → Sum of Amount by Payment Type
+
+### Dashboard: Accounts with Payments Dashboard
+Includes:
+- Total Payments by Account (bar chart)
+- Total Amount by Payment Type (donut chart)
+
+- 
+
+---
+
+## 🧪 Test Coverage
+
+| Class Name                        | Coverage |
+|----------------------------------|----------|
+| AccountPaymentController.cls      | ~91%     |
+
+---
