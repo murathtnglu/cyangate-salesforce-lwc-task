@@ -87,13 +87,15 @@ Below is the object schema showing the **Master-Detail relationship** between Ac
 - Visualization:
   - Donut Chart → Sum of Amount by Account
   - Bar Chart → Sum of Amount by Payment Type
+ 
+  ![Reports](./report.png)
 
 ### Dashboard: Accounts with Payments Dashboard
 Includes:
 - Total Payments by Account (bar chart)
 - Total Amount by Payment Type (donut chart)
 
-- 
+  ![Dashboard](./dashboard.png)
 
 ---
 
